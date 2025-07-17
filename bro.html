@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>成为我的兄弟吗？</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
+        }
+        
+        .header {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            border-radius: 3px;
+        }
+        
+        .avatar-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 25px;
+            position: relative;
+        }
+        
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 60px;
+            font-weight: bold;
+        }
+        
+        .avatar-frame {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid #ff9a9e;
+            border-radius: 50%;
+            z-index: -1;
+            animation: rotate 20s linear infinite;
+        }
+        
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+            position: relative;
+            min-height: 55px;
+        }
+        
+        button {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0);
+            border-radius: 50px;
+            transition: transform 0.4s ease;
+            z-index: -1;
+        }
+        
+        button:hover::before {
+            transform: scale(1);
+        }
+        
+        #yesBtn {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        #noBtn {
+            background: linear-gradient(to right, #ff9a9e 0%, #fad0c4 100%);
+            color: white;
+            transition: transform 0.4s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .friendship-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: bounce 2s infinite;
+        }
+        
+        .icon:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .icon:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
+            100% { transform: translateX(0); }
+        }
+        
+        @media (max-width: 420px) {
+            .container {
+                padding: 25px 15px;
+                max-width: 100%;
+                margin: 0 10px;
+            }
+            
+            .avatar-container {
+                width: 100px;
+                height: 100px;
+                margin: 0 auto 15px;
+            }
+            
+            .avatar {
+                font-size: 40px;
+                border-width: 3px;
+            }
+            
+            h1 {
+                font-size: 22px;
+                line-height: 1.3;
+            }
+            
+            .subtitle {
+                font-size: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .friendship-icons {
+                margin: 20px 0;
+                gap: 15px;
+            }
+            
+            .icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .icon svg {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .buttons {
+                gap: 12px;
+                margin-top: 25px;
+            }
+            
+            button {
+                padding: 16px 20px;
+                font-size: 17px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="avatar-container">
+                <img src="avatar.jpg" alt="兄弟头像" class="avatar">
+                <div class="avatar-frame"></div>
+            </div>
+            <h1>你愿意成为我的兄弟吗？</h1>
+            <p class="subtitle">让我们开启一段难忘的友谊之旅！</p>
+        </div>
+        
+        <div class="friendship-icons">
+            <div class="icon">
+                <svg width="40" height="40" viewBox="0 0 24 24">
+                    <path fill="#ff6b6b" d="M18,9C19.11,9 20,9.89 20,11V14C20,15.11 19.11,16 18,16H15V14H18V11H16V9H18M6,9C7.11,9 8,9.89 8,11V14C8,15.11 7.11,16 6,16H3C1.89,16 1,15.11 1,14V11C1,9.89 1.89,9 3,9H6M6,11H3V14H6V11M15,9V16H13V14H10V16H8V9H10V12H13V9H15Z" />
+                </svg>
+            </div>
+            <div class="icon">
+                <svg width="40" height="40" viewBox="0 0 24 24">
+                    <path fill="#4facfe" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5M12,17.23C10.25,17.23 8.71,16.5 7.81,15.42L9.23,14C9.68,14.72 10.75,15.23 12,15.23C13.25,15.23 14.32,14.72 14.77,14L16.19,15.42C15.29,16.5 13.75,17.23 12,17.23M15.5,11C14.7,11 14,10.3 14,9.5C14,8.7 14.7,8 15.5,8C16.3,8 17,8.7 17,9.5C17,10.3 16.3,11 15.5,11Z" />
+                </svg>
+            </div>
+            <div class="icon">
+                <svg width="40" height="40" viewBox="0 0 24 24">
+                    <path fill="#6a67ce" d="M21,6H3A2,2 0 0,0 1,8V16A2,2 0 0,0 3,18H21A2,2 0 0,0 23,16V8A2,2 0 0,0 21,6M21,16H3V8H21V16M6,15H8V13H10V11H8V9H6V11H4V13H6V15M14.5,15A1.5,1.5 0 0,0 16,13.5V11.5A1.5,1.5 0 0,0 14.5,10H13V15H14.5M20,13.5V11.5C20,10.67 19.33,10 18.5,10H17V15H18.5A1.5,1.5 0 0,0 20,13.5Z" />
+                </svg>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button id="yesBtn">愿意</button>
+            <button id="noBtn">不要</button>
+        </div>
+    </div>
+    
+    <script>
+        // 获取按钮元素
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const container = document.querySelector('.container');
+        
+        // 计算最大移动范围（缩小范围）
+        const MAX_MOVE_X = 150; // 水平最大移动距离
+        const MAX_MOVE_Y = 100; // 垂直最大移动距离
+        
+        // 移动按钮到随机位置（在较小范围内）
+        function moveButtonRandomly() {
+            const offsetX = (Math.random() - 0.5) * 2 * MAX_MOVE_X;
+            const offsetY = (Math.random() - 0.5) * 2 * MAX_MOVE_Y;
+            
+            noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        }
+        
+        // "不要"按钮的鼠标悬停事件（桌面）和触摸事件（移动设备）
+        noBtn.addEventListener('mouseover', moveButtonRandomly);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButtonRandomly();
+        });
+        
+        // "不要"按钮的点击事件（抖动效果）
+        noBtn.addEventListener('click', () => {
+            // 抖动效果
+            noBtn.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                noBtn.style.animation = '';
+            }, 500);
+            
+            // 显示消息
+            alert('别这样嘛，再考虑考虑呗~😱');
+        });
+
+        // "愿意"按钮逻辑
+        yesBtn.addEventListener('click', () => {
+            // 创建庆祝效果
+            createConfetti();
+            
+            // 显示消息
+            const toast = document.createElement('div');
+            toast.style.position = 'fixed';
+            toast.style.bottom = '30px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            toast.style.color = 'white';
+            toast.style.padding = '12px 20px';
+            toast.style.borderRadius = '8px';
+            toast.style.zIndex = '1000';
+            toast.style.fontSize = '16px';
+            toast.textContent = '太棒了！以后我们就是最好的兄弟啦！🤝';
+            document.body.appendChild(toast);
+            
+            // 3秒后自动移除提示
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+            
+            // 改变容器样式
+            container.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+            container.style.color = 'white';
+            
+            // 更新文本
+            document.querySelector('h1').textContent = '我们成为兄弟啦！';
+            document.querySelector('.subtitle').textContent = '一起创造美好回忆吧！';
+            
+            // 移除按钮
+            document.querySelector('.buttons').innerHTML = `
+                <div style="padding:20px;font-size:24px;">
+                    <svg width="40" height="40" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 10px;">
+                        <path fill="white" d="M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9M12,3A9,9 0 0,1 21,12A9,9 0 0,1 12,21A9,9 0 0,1 3,12A9,9 0 0,1 12,3Z" />
+                    </svg>
+                    兄弟同心，其利断金！
+                </div>
+            `;
+        });
+        
+        // 创建彩色纸屑效果（减少数量以优化移动设备性能）
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4facfe', '#6a67ce', '#00f2fe', '#ff9a9e'];
+            const containerRect = container.getBoundingClientRect();
+            
+            for (let i = 0; i < 50; i++) { // 减少到50个纸屑，提升移动性能
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * containerRect.width + 'px';
+                confetti.style.top = Math.random() * containerRect.height + 'px';
+                confetti.style.opacity = '1';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.transform = `scale(${Math.random() * 0.8 + 0.2})`;
+                
+                container.appendChild(confetti);
+                
+                // 动画效果
+                setTimeout(() => {
+                    confetti.style.transition = 'transform 1.5s ease, opacity 1.5s ease';
+                    confetti.style.transform = `translate(${(Math.random() - 0.5) * 300}px, ${Math.random() * 200 + 100}px) rotate(${Math.random() * 360}deg)`;
+                    confetti.style.opacity = '0';
+                    
+                    // 移除元素
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 1500);
+                }, 10);
+            }
+        }
+        
+        // 窗口大小变化时重置按钮位置
+        window.addEventListener('resize', () => {
+            noBtn.style.transform = '';
+        });
+    </script>
+</body>
+</html>    
